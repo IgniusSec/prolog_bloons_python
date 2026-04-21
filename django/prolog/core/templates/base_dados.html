@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Base de dados{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<section class="mb-6">
+  <h2 class="text-2xl font-semibold text-gray-800">Editar Base Prolog</h2>
+  <p class="text-gray-600">
+    Modifique a base de conhecimento e salve para recarregar o motor Prolog.
+  </p>
+</section>
+
+<!-- Card Editor -->
+<section class="bg-white p-6 rounded-2xl shadow-md">
+
+  <form method="POST" class="flex flex-col gap-4">
+    {% csrf_token %}
+
+    <!-- Label -->
+    <label class="text-sm font-medium text-gray-700">
+      Conteúdo da base (.pl)
+    </label>
+
+    <!-- Textarea -->
+    <textarea
+      name="conteudo"
+      rows="25"
+      class="w-full font-mono text-sm border border-gray-300 rounded-xl p-4 
+             focus:outline-none focus:ring-2 focus:ring-blue-500 
+             bg-gray-50"
+      spellcheck="false"
+    >{{ conteudo }}</textarea>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center">
+
+      <span class="text-sm text-gray-500">
+        Alterações serão aplicadas imediatamente após salvar.
+      </span>
+
+      <button
+        type="submit"
+        class="bg-blue-600 text-white px-6 py-2 rounded-xl 
+               hover:bg-blue-700 transition shadow-sm"
+      >
+        Salvar alterações
+      </button>
+
+    </div>
+  </form>
+
+</section>
+
+{% endblock content %}

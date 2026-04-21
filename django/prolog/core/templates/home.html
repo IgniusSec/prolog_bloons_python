@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Prolog UI{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="bg-white p-6 rounded-2xl shadow-md mb-6">
+  <h2 class="text-2xl font-semibold mb-2">
+    Interface para Execução de Prolog
+  </h2>
+  <p class="text-gray-600">
+    Envie consultas e visualize resultados de forma interativa.
+  </p>
+</section>
+
+<!-- Query -->
+<section class="bg-white p-6 rounded-2xl shadow-md mb-6">
+  <h3 class="text-xl font-semibold mb-4">Executar Consulta</h3>
+
+  <form method="POST" action="{% url 'execute_query' %}" class="space-y-4">
+    {% csrf_token %}
+
+    <textarea
+      name="query"
+      rows="4"
+      class="w-full border rounded-lg p-3"
+      placeholder="Ex: ancestor(X, Y)."
+      >{{query}}</textarea>
+
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+      Executar
+    </button>
+  </form>
+</section>
+
+<!-- Resultado -->
+<section class="bg-white p-6 rounded-2xl shadow-md">
+  <h3 class="text-xl font-semibold mb-4">Resultado</h3>
+
+  {% if result %}
+    <pre class="bg-gray-900 text-green-400 p-4 rounded-lg">
+{{ result }}
+    </pre>
+  {% else %}
+    <p class="text-gray-500">Nenhum resultado ainda.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

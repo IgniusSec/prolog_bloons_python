@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Prolog UI{% endblock %}</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 250px;
+            padding: 15px;
+            border-radius: 8px;
+            color: #fff;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success { background-color: #28a745; }
+        .toast.error   { background-color: #dc3545; }
+        .toast.warning { background-color: #ffc107; color: #000; }
+        .toast.info    { background-color: #17a2b8; }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Navbar global -->
+    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Prolog UI</h1>
+            <div class="space-x-4">
+                <a href="{% url 'home' %}" class="hover:text-gray-300">Home</a>
+                <a href="#" class="hover:text-gray-300">Consultas</a>
+                <a href="{% url 'base-dados' %}" class="hover:text-gray-300">Base de dados</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo dinâmico -->
+    <main class="flex-grow container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer global -->
+    <footer class="bg-gray-900 text-white text-center p-4">
+        <p>© 2026 - Interface Prolog com Django</p>
+    </footer>
+
+    <!-- Toasts -->
+    <div id="toast-container"></div>
+
+    <script>
+        function showToast(message, type="info") {
+            const container = document.getElementById("toast-container");
+
+            const toast = document.createElement("div");
+            toast.classList.add("toast", type);
+            toast.textContent = message;
+
+            container.appendChild(toast);
+
+            setTimeout(() => toast.classList.add("show"), 10);
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+                setTimeout(() => container.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if messages %}
+                {% for message in messages %}
+                    showToast("{{ message|escapejs }}", "{{ message.tags }}");
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>
