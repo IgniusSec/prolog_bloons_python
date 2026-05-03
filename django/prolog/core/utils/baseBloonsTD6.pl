@@ -3,111 +3,185 @@
 % =========================
 
 % Primary
-torre('Dart Monkey').
-torre('Boomerang Monkey').
-torre('Bomb Shooter').
-torre('Tack Shooter').
-torre('Ice Monkey').
-torre('Glue Gunner').
+torre(1, 'Dart Monkey').
+torre(2, 'Boomerang Monkey').
+torre(3, 'Bomb Shooter').
+torre(4, 'Tack Shooter').
+torre(5, 'Ice Monkey').
+torre(6, 'Glue Gunner').
+torre(25, 'Desperado').
 
 % Military
-torre('Sniper Monkey').
-torre('Monkey Sub').
-torre('Monkey Buccaneer').
-torre('Monkey Ace').
-torre('Heli Pilot').
-torre('Mortar Monkey').
-torre('Dartling Gunner').
+torre(7, 'Sniper Monkey').
+torre(8, 'Monkey Sub').
+torre(9, 'Monkey Buccaneer').
+torre(10, 'Monkey Ace').
+torre(11, 'Heli Pilot').
+torre(12, 'Mortar Monkey').
+torre(13, 'Dartling Gunner').
 
 % Magic
-torre('Wizard Monkey').
-torre('Super Monkey').
-torre('Ninja Monkey').
-torre('Alchemist').
-torre('Druid').
-torre('Mermonkey').
+torre(14, 'Wizard Monkey').
+torre(15, 'Super Monkey').
+torre(16, 'Ninja Monkey').
+torre(17, 'Alchemist').
+torre(18, 'Druid').
+torre(19, 'Mermonkey').
 
 % Support
-torre('Banana Farm').
-torre('Spike Factory').
-torre('Monkey Village').
-torre('Engineer Monkey').
-torre('Beast Handler').
+torre(20, 'Banana Farm').
+torre(21, 'Spike Factory').
+torre(22, 'Monkey Village').
+torre(23, 'Engineer Monkey').
+torre(24, 'Beast Handler').
 
 % =========================
 % TIPOS
 % =========================
 
-tipo('Dart Monkey', primary).
-tipo('Boomerang Monkey', primary).
-tipo('Bomb Shooter', primary).
-tipo('Tack Shooter', primary).
-tipo('Ice Monkey', primary).
-tipo('Glue Gunner', primary).
+tipo(1, primary).
+tipo(2, primary).
+tipo(3, primary).
+tipo(4, primary).
+tipo(5, primary).
+tipo(6, primary).
 
-tipo('Sniper Monkey', military).
-tipo('Monkey Sub', military).
-tipo('Monkey Buccaneer', military).
-tipo('Monkey Ace', military).
-tipo('Heli Pilot', military).
-tipo('Mortar Monkey', military).
-tipo('Dartling Gunner', military).
+tipo(7, military).
+tipo(8, military).
+tipo(9, military).
+tipo(10, military).
+tipo(11, military).
+tipo(12, military).
+tipo(13, military).
 
-tipo('Wizard Monkey', magic).
-tipo('Super Monkey', magic).
-tipo('Ninja Monkey', magic).
-tipo('Alchemist', magic).
-tipo('Druid', magic).
-tipo('Mermonkey', magic).
+tipo(14, magic).
+tipo(15, magic).
+tipo(16, magic).
+tipo(17, magic).
+tipo(18, magic).
+tipo(19, magic).
 
-tipo('Banana Farm', support).
-tipo('Spike Factory', support).
-tipo('Monkey Village', support).
-tipo('Engineer Monkey', support).
-tipo('Beast Handler', support).
+tipo(20, support).
+tipo(21, support).
+tipo(22, support).
+tipo(23, support).
+tipo(24, support).
 
 % =========================
 % PROPRIEDADES DAS TORRES
 % =========================
 
-alcance_global('Sniper Monkey').
-alcance_global('Monkey Ace').
-alcance_global('Heli Pilot').
-alcance_global('Mortar Monkey').
-alcance_global('Dartling Gunner').
+alcance_global(7).
+alcance_global(10).
+alcance_global(11).
+alcance_global(12).
+alcance_global(13).
 
-alcance_curto('Tack Shooter').
-alcance_curto('Ice Monkey').
-alcance_curto('Glue Gunner').
+alcance_curto(4).
+alcance_curto(5).
+alcance_curto(6).
 
-dano_area('Bomb Shooter').
-dano_area('Mortar Monkey').
+dano_area(3).
+dano_area(12).
 
-ataque_rapido('Super Monkey').
-ataque_rapido('Ninja Monkey').
-ataque_rapido('Dartling Gunner').
+ataque_rapido(15).
+ataque_rapido(16).
+ataque_rapido(13).
 
-multi_direcional('Tack Shooter').
+multi_direcional(4).
 
-congela('Ice Monkey').
-retarda('Glue Gunner').
+congela(5).
+retarda(6).
 
-gera_dinheiro('Banana Farm').
-buffa('Monkey Village').
-buffa('Alchemist').
-buffa('Engineer Monkey').
+gera_dinheiro(20).
+buffa(22).
+buffa(17).
+buffa(23).
 
 % =========================
 % CAPACIDADES
 % =========================
 
-detecta_camuflado('Ninja Monkey').
-detecta_camuflado('Monkey Sub').
-detecta_camuflado('Spike Factory').
+% =========================
+% CAMUFLADO (DETECÇÃO)
+% =========================
 
-quebra_lead('Bomb Shooter').
-quebra_lead('Mortar Monkey').
-quebra_lead('Alchemist').
+camuflado(16, '0-0-0').
+camuflado(21, '0-0-0').
+camuflado(1, '0-0-2').
+camuflado(5, '2-0-0').
+camuflado(7, '0-1-0').
+camuflado(25, '0-1-0').
+camuflado(8, '3-0-0').
+camuflado(9, '0-0-2').
+camuflado(10, '0-2-0').
+camuflado(11, '0-2-0').
+camuflado(12, '0-0-3').
+camuflado(13, '0-1-0').
+camuflado(14, '0-0-2').
+camuflado(15, '0-0-2').
+camuflado(18, '1-0-0').
+camuflado(23, '0-2-0').
+camuflado(19, '0-0-1').
+camuflado(24, '0-0-2').
+
+camuflado(22, '0-2-0'). % Village (Monkey Village)
+camuflado(23, '0-3-0').
+
+% =========================
+% LEAD
+% =========================
+
+lead(3, '0-0-0').
+lead(12, '0-0-0').
+lead(17, '0-0-0').
+
+lead(1, '4-0-0').
+lead(2, '0-0-2').
+lead(4, '3-0-0').
+lead(5, '2-0-0').
+lead(6, '2-0-0').
+lead(7, '1-0-0').
+lead(25, '0-3-0').
+lead(8, '0-2-0').
+lead(9, '0-2-0').
+lead(10, '0-0-4').
+lead(11, '3-0-0').
+lead(13, '0-3-0').
+lead(14, '0-1-0').
+lead(15, '2-0-0').
+lead(16, '0-0-3').
+lead(18, '1-0-0').
+lead(21, '2-0-0').
+lead(23, '0-3-0').
+lead(24, '3-0-0').
+lead(22, '0-3-0').
+
+% =========================
+% FROZEN
+% =========================
+
+frozen(3, '0-0-0').
+frozen(12, '0-0-0').
+frozen(14, '0-0-0').
+frozen(17, '0-0-0').
+
+frozen(1, '4-0-0').
+frozen(2, '0-0-2').
+frozen(4, '3-0-0').
+frozen(6, '2-0-0').
+frozen(7, '1-0-0').
+frozen(8, '0-2-0').
+frozen(9, '0-2-0').
+frozen(10, '0-1-0').
+frozen(11, '3-0-0').
+frozen(13, '3-0-0').
+frozen(15, '2-0-0').
+frozen(16, '0-0-3').
+frozen(18, '1-0-0').
+frozen(21, '2-0-0').
+frozen(23, '0-3-0').
+frozen(22, '0-3-0').
 
 dano_alto('Super Monkey').
 dano_alto('Sniper Monkey').
@@ -217,3 +291,15 @@ lista_bloons_fase(inicial, X):-
 
 lista_bloons_fase(Fase, X):-
   findall(B, (bloon(B), aparece(B, Fase)), X),!.
+
+ve_camuflado(Nome, Nivel) :- 
+    torre(Id, Nome), 
+    camuflado(Id, Nivel).
+
+destroi_chumbo(Nome, Nivel) :- 
+    torre(Id, Nome), 
+    lead(Id, Nivel).
+
+destroi_congelado(Nome, Nivel) :- 
+    torre(Id, Nome), 
+    frozen(Id, Nivel).
