@@ -23,11 +23,14 @@
   <form method="POST" action="{% url 'execute_query' %}" class="space-y-4">
     {% csrf_token %}
 
+    <label for="query" class="sr-only">Consulta Prolog</label>
+
     <textarea
+      id="query"
       name="query"
       rows="4"
       placeholder="Ex: ancestor(X, Y)."
-      class="w-full border border-gray-300 dark:border-gray-600 
+      class="w-full font-mono text-sm border border-gray-300 dark:border-gray-600 
              rounded-lg p-3 
              bg-gray-50 dark:bg-gray-900 
              text-gray-900 dark:text-gray-100
@@ -35,6 +38,7 @@
     >{{ query }}</textarea>
 
     <button 
+      type="submit"
       class="bg-blue-600 text-white px-4 py-2 rounded-lg 
              hover:bg-blue-700 transition">
       Executar
@@ -50,9 +54,7 @@
 
   {% if result %}
     <pre class="bg-gray-900 dark:bg-black text-green-400 
-               p-4 rounded-lg overflow-x-auto text-sm font-mono">
-{{ result }}
-    </pre>
+               p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed">{{ result }}</pre>
   {% else %}
     <p class="text-gray-500 dark:text-gray-400">
       Nenhum resultado ainda.
