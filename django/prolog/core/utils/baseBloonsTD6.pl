@@ -286,11 +286,11 @@ aparece('BAD', late).
 % REGRA Queries
 % =========================
 
-lista_bloons_fase(inicial, X):-
-  findall(B, (bloon(B), \+aparece(B, _)), X), !.
+lista_bloons_fase(inicial, Lista_Bloons):-
+  findall(B, (bloon(B), \+aparece(B, _)), Lista_Bloons), !.
 
-lista_bloons_fase(Fase, X):-
-  findall(B, (bloon(B), aparece(B, Fase)), X),!.
+lista_bloons_fase(Fase, Lista_Bloons):-
+  findall(B, (bloon(B), aparece(B, Fase)), Lista_Bloons),!.
 
 ve_camuflado(Nome, Nivel) :- 
     torre(Id, Nome), 
@@ -303,3 +303,30 @@ destroi_chumbo(Nome, Nivel) :-
 destroi_congelado(Nome, Nivel) :- 
     torre(Id, Nome), 
     frozen(Id, Nivel).
+
+estouro_especial(Macaco, Path, Estouro):-
+  torre(Id, Macaco),
+  (frozen(Id, Path), Estouro = 'frozen' ; lead(Id, Path), Estouro = 'lead' ; camuflado(Id, Path), Estouro = 'camuflado').
+
+bloons_especiais(Bloon, Propriedade):-
+    ((rapido(Bloon), Propriedade = 'rapido');(camuflado(Bloon), Propriedade = 'camuflado');
+    (regenera(Bloon), Propriedade = 'regenera');(resistente(Bloon), Propriedade = 'resistente');
+    (imune_explosao(Bloon), Propriedade = 'imune_explosao');(imune_congelamento(Bloon), Propriedade = 'imune_congelamento');
+    (imune_magia(Bloon), Propriedade = 'imune_magia')).
+
+% tipo_necessario_macaco([], _).
+% tipo_necessario_macaco([H|T], Tipo):-
+%
+%
+%
+% % lista de macacos possiveis, 
+% macaco_fase([], []).
+% macaco_fase(Macaco, [H|T]):-
+%
+%   \+
+%
+%
+%
+% passa_fase(Fase, Macacos):-
+%   lista_bloons_fase(Fase, Bloons),
+%   macaco_fase(Macacos, Bloons).
