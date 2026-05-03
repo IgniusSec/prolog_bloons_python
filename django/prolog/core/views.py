@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.engine_prolog import get_prolog, reset_prolog
+from core.services.prolog_service import get_prolog, reset_prolog
 from django.contrib import messages
 import os
 
