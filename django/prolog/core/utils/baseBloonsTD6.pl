@@ -93,7 +93,52 @@ multi_direcional(4).
 congela(5).
 retarda(6).
 
-gera_dinheiro(20).
+% =========================
+% GERAÇÃO DE DINHEIRO (RENDA)
+% =========================
+
+gera_dinheiro(20, '0-0-0', 80).
+gera_dinheiro(20, '1-0-0', 120).
+gera_dinheiro(20, '2-0-0', 160).
+gera_dinheiro(20, '3-0-0', 320).
+gera_dinheiro(20, '4-0-0', 1500).
+gera_dinheiro(20, '5-0-0', 6000).
+
+gera_dinheiro(20, '0-2-0', 100).
+gera_dinheiro(20, '1-2-0', 150).
+gera_dinheiro(20, '2-2-0', 200).
+gera_dinheiro(20, '3-2-0', 400).
+gera_dinheiro(20, '4-2-0', 1875).
+gera_dinheiro(20, '5-2-0', 7500).
+
+gera_dinheiro(20, '0-3-0', 115).
+gera_dinheiro(20, '1-3-0', 187).
+gera_dinheiro(20, '2-4-0', 250).
+
+gera_dinheiro(20, '0-0-3', 320).
+gera_dinheiro(20, '0-0-4', 1120).
+gera_dinheiro(20, '0-0-5', 5120).
+
+gera_dinheiro(20, '1-0-3', 360).
+gera_dinheiro(20, '1-0-4', 1260).
+gera_dinheiro(20, '1-0-5', 5260).
+
+gera_dinheiro(20, '2-0-3', 400).
+gera_dinheiro(20, '2-0-4', 1400).
+gera_dinheiro(20, '2-0-5', 5400).
+
+gera_dinheiro(7, '0-4-0', 1500).
+gera_dinheiro(7, '0-5-0', 3000).
+
+gera_dinheiro(9, '0-0-3', 200).
+gera_dinheiro(9, '0-0-4', 500).
+
+gera_dinheiro(11, '0-4-0', 1800).
+gera_dinheiro(11, '0-5-0', 4500).
+
+gera_dinheiro(18, '0-4-0', 240). 
+gera_dinheiro(18, '0-5-0', 1000). 
+
 buffa(22).
 buffa(17).
 buffa(23).
@@ -292,14 +337,56 @@ lista_bloons_fase(inicial, X):-
 lista_bloons_fase(Fase, X):-
   findall(B, (bloon(B), aparece(B, Fase)), X),!.
 
-ve_camuflado(Nome, Nivel) :- 
+lista_torres_veem_camuflado(Nome, Nivel) :- 
     torre(Id, Nome), 
     camuflado(Id, Nivel).
 
-destroi_chumbo(Nome, Nivel) :- 
+lista_torres_destroi_chumbo(Nome, Nivel) :- 
     torre(Id, Nome), 
     lead(Id, Nivel).
 
-destroi_congelado(Nome, Nivel) :- 
+lista_torres_destroi_congelado(Nome, Nivel) :- 
     torre(Id, Nome), 
     frozen(Id, Nivel).
+
+% Regras economia 
+renda_fixa_cada_torre_por_rodada_em_cada_nivel(Nome, Nivel, Valor) :-
+    torre(Id, Nome),
+    gera_dinheiro(Id, Nivel, Valor).
+
+
+max_dinheiro_por_torre_por_rodada(Nome, ValorMaximo) :-
+    torre(Id, Nome),
+    findall(Valor, (gera_dinheiro(Id, _, Valor), number(Valor)), ListaValores),
+    ListaValores \= [],
+    maior_da_lista(ListaValores, ValorMaximo).
+
+maior_da_lista([UnicoElemento], UnicoElemento) :- !.
+
+maior_da_lista([Cabeca | Cauda], Maximo) :-
+    maior_da_lista(Cauda, MaxCauda),
+    (Cabeca > MaxCauda -> Maximo = Cabeca ; Maximo = MaxCauda).
+
+
+listar_torres_dinheiro(NomesUnicos) :-
+    findall(Nome, (torre(Id, Nome), gera_dinheiro(Id, _, _)), ListaComRepeticao),
+    remove_duplicatas(ListaComRepeticao, NomesUnicos).
+
+remove_duplicatas([], []).
+
+remove_duplicatas([H | T], ListaSemDuplicata) :-
+    pertence(H, T), 
+    !,
+    remove_duplicatas(T, ListaSemDuplicata).
+
+remove_duplicatas([H | T], [H | Resto]) :-
+    remove_duplicatas(T, Resto).
+
+pertence(X, [X | _]) :- !.
+pertence(X, [_ | T]) :- pertence(X, T).
+
+primeiro_militar_anti_chumbo(Nome) :-
+    tipo(Id, military),
+    lead(Id, _),
+    torre(Id, Nome),
+    !.
