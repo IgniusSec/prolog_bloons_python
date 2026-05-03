@@ -4,99 +4,86 @@
     <meta charset="UTF-8">
     <title>{% block title %}Prolog UI{% endblock %}</title>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 1. Aplica tema ANTES de tudo -->
+    <script>
+      if (localStorage.getItem("darkMode") === "enabled") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- 2. Config Tailwind -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class'
+      }
+    </script>
+
+    <!-- 3. Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     {% block extra_css %}{% endblock %}
 
-    <style>
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .toast {
-            min-width: 250px;
-            padding: 15px;
-            border-radius: 8px;
-            color: #fff;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s ease;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .toast.success { background-color: #28a745; }
-        .toast.error   { background-color: #dc3545; }
-        .toast.warning { background-color: #ffc107; color: #000; }
-        .toast.info    { background-color: #17a2b8; }
-    </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
 
-    <!-- Navbar global -->
-    <nav class="bg-gray-900 text-white p-4 shadow-lg">
+    <!-- Navbar -->
+    <nav class="bg-gray-900 dark:bg-gray-800 text-white p-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">Prolog UI</h1>
-            <div class="space-x-4">
+
+            <div class="flex items-center space-x-4">
                 <a href="{% url 'home' %}" class="hover:text-gray-300">Home</a>
                 <a href="#" class="hover:text-gray-300">Consultas</a>
                 <a href="{% url 'base-dados' %}" class="hover:text-gray-300">Base de dados</a>
+
+                <!-- Toggle -->
+                <button id="theme-toggle"
+                        onclick="toggleDark()"
+                        class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 transition">
+                    🌙
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- Conteúdo dinâmico -->
+    <!-- Conteúdo -->
     <main class="flex-grow container mx-auto p-6">
         {% block content %}
         {% endblock %}
     </main>
 
-    <!-- Footer global -->
-    <footer class="bg-gray-900 text-white text-center p-4">
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-gray-800 text-white text-center p-4">
         <p>© 2026 - Interface Prolog com Django</p>
     </footer>
 
-    <!-- Toasts -->
-    <div id="toast-container"></div>
-
+    <!-- SCRIPT -->
     <script>
-        function showToast(message, type="info") {
-            const container = document.getElementById("toast-container");
+        // Toggle
+        function toggleDark() {
+            const html = document.documentElement;
+            const btn = document.getElementById("theme-toggle");
 
-            const toast = document.createElement("div");
-            toast.classList.add("toast", type);
-            toast.textContent = message;
+            const isDark = html.classList.toggle("dark");
 
-            container.appendChild(toast);
+            localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
 
-            setTimeout(() => toast.classList.add("show"), 10);
-
-            setTimeout(() => {
-                toast.classList.remove("show");
-                setTimeout(() => container.removeChild(toast), 300);
-            }, 3000);
+            if (btn) {
+                btn.textContent = isDark ? "☀️" : "🌙";
+            }
         }
 
+        // Sincroniza botão
         document.addEventListener("DOMContentLoaded", function () {
-            {% if messages %}
-                {% for message in messages %}
-                    showToast("{{ message|escapejs }}", "{{ message.tags }}");
-                {% endfor %}
-            {% endif %}
+            const btn = document.getElementById("theme-toggle");
+            const isDark = document.documentElement.classList.contains("dark");
+
+            if (btn) {
+                btn.textContent = isDark ? "☀️" : "🌙";
+            }
         });
     </script>
 
