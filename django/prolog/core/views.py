@@ -42,11 +42,15 @@ def format_results(results):
     if not results:
         return "Nenhum resultado."
 
-    keys = results[0].keys()
-
     lines = []
     for r in results:
-        line = ", ".join(f"{k} = {v}" for k, v in r.items())
+        formatted_items = []
+        for k, v in r.items():
+            if isinstance(v, bytes):
+                v = v.decode("utf-8")
+            formatted_items.append(f"{k} = {v}")
+
+        line = ", ".join(formatted_items)
         lines.append(line)
 
     return "\n".join(lines)
@@ -54,9 +58,14 @@ def format_results(results):
 
 def execute_query(request):
     result = None
+    query = None
 
     if request.method == "POST":
         query = request.POST.get("query")
+
+        # normaliza para aspas simples
+        if query:
+            query = query.replace('"', "'")
 
         prolog = get_prolog()
 
@@ -64,11 +73,13 @@ def execute_query(request):
             raw = list(prolog.query(query))
 
             if not raw:
-                result = "Nenhum resultado."
+                result = "false"
+            elif raw == [{}]:
+                result = "true"
             else:
                 result = format_results(raw)
 
         except Exception as e:
-            messages.error(e)
+            messages.error(request, str(e))
 
     return render(request, "home.html", {"result": result, "query": query})
