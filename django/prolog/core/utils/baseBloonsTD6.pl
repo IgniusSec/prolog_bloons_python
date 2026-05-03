@@ -25,12 +25,14 @@ torre('Super Monkey').
 torre('Ninja Monkey').
 torre('Alchemist').
 torre('Druid').
+torre('Mermonkey').
 
 % Support
 torre('Banana Farm').
 torre('Spike Factory').
 torre('Monkey Village').
 torre('Engineer Monkey').
+torre('Beast Handler').
 
 % =========================
 % TIPOS
@@ -56,11 +58,13 @@ tipo('Super Monkey', magic).
 tipo('Ninja Monkey', magic).
 tipo('Alchemist', magic).
 tipo('Druid', magic).
+tipo('Mermonkey', magic).
 
 tipo('Banana Farm', support).
 tipo('Spike Factory', support).
 tipo('Monkey Village', support).
 tipo('Engineer Monkey', support).
+tipo('Beast Handler', support).
 
 % =========================
 % PROPRIEDADES DAS TORRES
@@ -69,6 +73,8 @@ tipo('Engineer Monkey', support).
 alcance_global('Sniper Monkey').
 alcance_global('Monkey Ace').
 alcance_global('Heli Pilot').
+alcance_global('Mortar Monkey').
+alcance_global('Dartling Gunner').
 
 alcance_curto('Tack Shooter').
 alcance_curto('Ice Monkey').
@@ -79,6 +85,7 @@ dano_area('Mortar Monkey').
 
 ataque_rapido('Super Monkey').
 ataque_rapido('Ninja Monkey').
+ataque_rapido('Dartling Gunner').
 
 multi_direcional('Tack Shooter').
 
@@ -88,6 +95,7 @@ retarda('Glue Gunner').
 gera_dinheiro('Banana Farm').
 buffa('Monkey Village').
 buffa('Alchemist').
+buffa('Engineer Monkey').
 
 % =========================
 % CAPACIDADES
@@ -95,6 +103,7 @@ buffa('Alchemist').
 
 detecta_camuflado('Ninja Monkey').
 detecta_camuflado('Monkey Sub').
+detecta_camuflado('Spike Factory').
 
 quebra_lead('Bomb Shooter').
 quebra_lead('Mortar Monkey').
@@ -113,12 +122,14 @@ bloon('Blue Bloon').
 bloon('Green Bloon').
 bloon('Yellow Bloon').
 bloon('Pink Bloon').
+bloon('Purple Bloon').
 bloon('Black Bloon').
 bloon('White Bloon').
 bloon('Lead Bloon').
 bloon('Zebra Bloon').
 bloon('Rainbow Bloon').
 bloon('Ceramic Bloon').
+bloon('Camo Bloon').
 bloon('MOAB').
 bloon('BFB').
 bloon('ZOMG').
@@ -131,6 +142,7 @@ bloon('BAD').
 
 rapido('Yellow Bloon').
 rapido('Pink Bloon').
+rapido('DDT').
 
 camuflado('DDT').
 camuflado('Camo Bloon').
@@ -146,21 +158,38 @@ resistente('ZOMG').
 resistente('BAD').
 
 imune_explosao('Black Bloon').
+imune_explosao('Zebra Bloon').
+
 imune_congelamento('White Bloon').
+imune_congelamento('Zebra Bloon').
+
+imune_magia('Purple Bloon').
 
 % =========================
 % HIERARQUIA
 % =========================
 
-gera('MOAB', 'Ceramic Bloon').
-gera('BFB', 'MOAB').
-gera('ZOMG', 'BFB').
 gera('BAD', 'ZOMG').
+gera('BAD', 'DDT').
+gera('ZOMG', 'BFB').
+gera('BFB', 'MOAB').
+gera('MOAB', 'Ceramic Bloon').
+gera('DDT', 'Ceramic Bloon').
 
 gera('Ceramic Bloon', 'Rainbow Bloon').
 gera('Rainbow Bloon', 'Zebra Bloon').
 gera('Zebra Bloon', 'Black Bloon').
 gera('Zebra Bloon', 'White Bloon').
+
+gera('Lead Bloon', 'Black Bloon').
+gera('Purple Bloon', 'Pink Bloon').
+
+gera('Black Bloon', 'Pink Bloon').
+gera('White Bloon', 'Pink Bloon').
+gera('Pink Bloon', 'Yellow Bloon').
+gera('Yellow Bloon', 'Green Bloon').
+gera('Green Bloon', 'Blue Bloon').
+gera('Blue Bloon', 'Red Bloon').
 
 % =========================
 % CONTEXTO
@@ -172,10 +201,19 @@ fase(late).
 
 aparece('Camo Bloon', middle).
 aparece('Lead Bloon', middle).
+aparece('Purple Bloon', middle).
 aparece('MOAB', middle).
 aparece('BFB', late).
 aparece('ZOMG', late).
+aparece('DDT', late).
 aparece('BAD', late).
     
-    
-    
+% =========================
+% REGRA Queries
+% =========================
+
+lista_bloons_fase(inicial, X):-
+  findall(B, (bloon(B), \+aparece(B, _)), X), !.
+
+lista_bloons_fase(Fase, X):-
+  findall(B, (bloon(B), aparece(B, Fase)), X),!.
