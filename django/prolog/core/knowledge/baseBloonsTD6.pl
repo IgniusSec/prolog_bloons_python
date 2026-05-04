@@ -228,9 +228,11 @@ frozen(21, '2-0-0').
 frozen(23, '0-3-0').
 frozen(22, '0-3-0').
 
-dano_alto('Super Monkey').
-dano_alto('Sniper Monkey').
-dano_alto('Monkey Ace').
+dano_alto(7, '5-0-2').
+dano_alto(10, '5-0-2').
+dano_alto(13, '5-0-2').
+dano_alto(14, '5-2-0').
+dano_alto(15, '5-2-0').
 
 % =========================
 % BLOONS
@@ -422,3 +424,62 @@ primeiro_militar_anti_chumbo(Nome) :-
     lead(Id, _),
     torre(Id, Nome),
     !.
+
+% ==========================================
+% SISTEMA ESPECIALISTA: RECOMENDAÇÃO DE TIMES (COM NÍVEIS BASES)
+% ==========================================
+
+exige_habilidade(Bloon, camuflado) :- camuflado(Bloon).
+exige_habilidade('Lead Bloon', chumbo).
+exige_habilidade('DDT', chumbo). 
+exige_habilidade(Bloon, dano_bruto) :- resistente(Bloon), \+ Bloon = 'Lead Bloon'. 
+macaco_cobre_habilidade(macaco(Nome, Nivel), camuflado) :- 
+    torre(Id, Nome), camuflado(Id, Nivel).
+    
+macaco_cobre_habilidade(macaco(Nome, Nivel), chumbo) :- 
+    torre(Id, Nome), lead(Id, Nivel).
+    
+macaco_cobre_habilidade(macaco(Nome, Nivel), dano_bruto) :- 
+    torre(Id, Nome), 
+    dano_alto(Id, Nivel).
+    dano_alto(Nome).
+lista_necessidades([], []).
+lista_necessidades([B | T], [Hab | Resto]) :-
+    exige_habilidade(B, Hab),
+    !,
+    lista_necessidades(T, Resto).
+
+lista_necessidades([_ | T], Resto) :- 
+    lista_necessidades(T, Resto).
+
+time_tem_habilidade(Hab, [Macaco | _]) :- 
+    macaco_cobre_habilidade(Macaco, Hab), 
+    !.
+time_tem_habilidade(Hab, [_ | T]) :- 
+    time_tem_habilidade(Hab, T).
+
+time_atende_necessidades([], _).
+time_atende_necessidades([Hab | T], Time) :-
+    time_tem_habilidade(Hab, Time),
+    time_atende_necessidades(T, Time).
+
+gera_esquadrao([macaco(M1, _), macaco(M2, _), macaco(M3, _)]) :-
+    torre(Id1, M1),
+    torre(Id2, M2), Id1 < Id2,
+    torre(Id3, M3), Id2 < Id3.
+
+preenche_niveis_vazios([]).
+preenche_niveis_vazios([macaco(_, Nivel) | T]) :-
+    (var(Nivel) -> Nivel = '0-0-0' ; true),
+    preenche_niveis_vazios(T).
+
+% ==========================================
+% REGRA PRINCIPAL: PASSA FASE
+% ==========================================
+passa_fase(Fase, Macacos) :-
+    lista_bloons_fase(Fase, Bloons),
+    lista_necessidades(Bloons, NecessidadesSujas),
+    remove_duplicatas(NecessidadesSujas, NecessidadesLimpas),
+    gera_esquadrao(Macacos),
+    time_atende_necessidades(NecessidadesLimpas, Macacos),
+    preenche_niveis_vazios(Macacos). % Chamada final para limpar a visualização
