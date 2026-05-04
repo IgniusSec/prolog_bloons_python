@@ -103,6 +103,7 @@ const queryGroups = {
 
   "Fases": [
     { label: "Todas", query: "fase(Fase)." },
+    { label: "Recomendação para fase", query: "passa_fase(Fase, Torre)." },
     { label: "Bloons da inicial", query: "lista_bloons_fase('inicial', Bloons)" },
     { label: "Bloons da middle", query: "lista_bloons_fase('middle', Bloons)" },
     { label: "Bloons da late", query: "lista_bloons_fase('late', Bloons)" }
