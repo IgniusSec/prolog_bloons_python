@@ -7,29 +7,30 @@
 <!-- Hero -->
 <section class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md mb-6">
   <h2 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
-    Interface para Execução de Prolog
+    Interface de pesquisa AVANÇADA sobre o BLOONS TD 6
   </h2>
   <p class="text-gray-600 dark:text-gray-400">
-    Envie consultas e visualize resultados de forma interativa.
+    Faça pesquisas absurdamente avançadas para obliterar todos os balões provenientes do joguinho!
   </p>
 </section>
 
 <!-- Query -->
 <section class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md mb-6">
   <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-    Executar Consulta
+    Consultar
   </h3>
+
+  <!-- Sugestões -->
+  <div id="query-buttons" class="mb-4"></div>
 
   <form method="POST" action="{% url 'execute_query' %}" class="space-y-4">
     {% csrf_token %}
-
-    <label for="query" class="sr-only">Consulta Prolog</label>
 
     <textarea
       id="query"
       name="query"
       rows="4"
-      placeholder="Ex: ancestor(X, Y)."
+      placeholder="Ex: torre(X)."
       class="w-full font-mono text-sm border border-gray-300 dark:border-gray-600 
              rounded-lg p-3 
              bg-gray-50 dark:bg-gray-900 
@@ -62,4 +63,116 @@
   {% endif %}
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+/* =========================
+   CONFIGURAÇÃO DAS QUERIES
+========================= */
+const queryGroups = {
+  "Torres": [
+    { label: "Todas", query: "torre(_, Torre)." },
+    { label: "Primary", query: "tipo_torre(Torre, 'primary')." },
+    { label: "Military", query: "tipo_torre(Torre, 'military')." },
+    { label: "Magic", query: "tipo_torre(Torre, 'magic')." },
+    { label: "Support", query: "tipo_torre(Torre, 'support')." }
+  ],
+
+  "Bloons": [
+    { label: "Todos", query: "bloon(X)." },
+    { label: "Rápidos", query: "rapido(X)." },
+    { label: "Camuflados", query: "camuflado(X)." },
+    { label: "Regeneradores", query: "regenera(X)." },
+    { label: "Resistentes", query: "resistente(X)." },
+    { label: "Imunes a explosão", query: "imune_explosao(X)." },
+    { label: "Imunes a congelamento", query: "imune_congelamento(X)." },
+    { label: "Imunes a magia", query: "imune_magia(X)." }
+  ],
+
+  "Capacidades": [
+    { label: "Camo", query: "detecta_camuflado(X)." },
+    { label: "Lead", query: "quebra_lead(X)." },
+    { label: "Dano alto", query: "dano_alto(X)." }
+  ]
+};
+
+/* =========================
+   SET QUERY (CORE)
+========================= */
+function setQuery(q, autoSubmit=false) {
+    const textarea = document.getElementById("query");
+    const form = textarea.closest("form");
+
+    textarea.value = q;
+    textarea.focus();
+
+    if (autoSubmit) {
+        form.submit();
+    }
+}
+
+/* =========================
+   RENDER BOTÕES
+========================= */
+function renderQueryButtons() {
+    const container = document.getElementById("query-buttons");
+    container.innerHTML = "";
+
+    Object.entries(queryGroups).forEach(([group, items]) => {
+
+        const title = document.createElement("p");
+        title.textContent = group;
+        title.className = "text-sm text-gray-500 dark:text-gray-400 mb-1 mt-2";
+
+        container.appendChild(title);
+
+        const row = document.createElement("div");
+        row.className = "flex flex-wrap gap-2 mb-2";
+
+        items.forEach(item => {
+            const btn = document.createElement("button");
+
+            btn.type = "button";
+            btn.textContent = item.label;
+
+            btn.className = `
+                px-3 py-1 text-sm rounded-full 
+                bg-gray-200 dark:bg-gray-700 
+                text-gray-800 dark:text-gray-200 
+                hover:bg-gray-300 dark:hover:bg-gray-600 
+                transition
+            `;
+
+            // 👉 clique já executa direto
+            btn.onclick = () => setQuery(item.query, true);
+
+            row.appendChild(btn);
+        });
+
+        container.appendChild(row);
+    });
+}
+
+/* =========================
+   INIT CONTROLADO
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+
+    renderQueryButtons();
+
+    // ✔ auto-execução única (sem loop)
+    if (!sessionStorage.getItem("autoExecuted")) {
+
+        const textarea = document.getElementById("query");
+
+        if (!textarea.value.trim()) {
+            sessionStorage.setItem("autoExecuted", "true");
+            setQuery("torre(X).", true);
+        }
+    }
+});
+
+</script>
 {% endblock %}
