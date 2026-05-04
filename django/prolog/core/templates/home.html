@@ -91,10 +91,12 @@ const queryGroups = {
     { label: "Imunes a magia", query: "imune_magia(X)." }
   ],
 
-  "Capacidades": [
-    { label: "Camo", query: "detecta_camuflado(X)." },
-    { label: "Lead", query: "quebra_lead(X)." },
-    { label: "Dano alto", query: "dano_alto(X)." }
+  "Habilidades": [
+    { label: "Detecta camuflado", query: "estouro_especial(Torre, Path, 'camuflado')." },
+    { label: "Estoura lead", query: "estouro_especial(Torre, Path, 'lead')" },
+    { label: "Estoura gelo", query: "estouro_especial(Torre, Path, 'frozen')" },
+    { label: "Gera dinheiro", query: "tipo_gera_dinheiro(Torre, Path, Dinheiro)" },
+    { label: "Alto dano", query: "dano_alto(Torre)" }
   ]
 };
 

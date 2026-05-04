@@ -331,23 +331,25 @@ aparece('BAD', late).
 % REGRA Queries
 % =========================
 
+% =========================
+% Basicas
+% =========================
+tipo_torre(Torre, Tipo):-
+  tipo(Id, Tipo),
+  torre(Id, Torre).
+
+tipo_gera_dinheiro(Torre, Path, Dinheiro):-
+  torre(Id, Torre),
+  gera_dinheiro(Id, Path, Dinheiro).
+
+
+% =========================
+
 lista_bloons_fase(inicial, Lista_Bloons):-
   findall(B, (bloon(B), \+aparece(B, _)), Lista_Bloons), !.
 
 lista_bloons_fase(Fase, Lista_Bloons):-
   findall(B, (bloon(B), aparece(B, Fase)), Lista_Bloons),!.
-
-lista_torres_veem_camuflado(Nome, Nivel) :- 
-    torre(Id, Nome), 
-    camuflado(Id, Nivel).
-
-lista_torres_destroi_chumbo(Nome, Nivel) :- 
-    torre(Id, Nome), 
-    lead(Id, Nivel).
-
-lista_torres_destroi_congelado(Nome, Nivel) :- 
-    torre(Id, Nome), 
-    frozen(Id, Nivel).
 
 estouro_especial(Macaco, Path, Estouro):-
   torre(Id, Macaco),
