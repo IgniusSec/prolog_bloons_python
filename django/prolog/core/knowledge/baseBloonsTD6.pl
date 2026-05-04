@@ -345,7 +345,6 @@ aparece('BAD', 'late').
 % REGRA Queries
 % =========================
 
-lista_bloons_fase(inicial, Lista_Bloons):-
 % =========================
 % Basicas
 % =========================
