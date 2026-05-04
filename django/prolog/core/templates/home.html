@@ -54,8 +54,22 @@
   </h3>
 
   {% if result %}
-    <pre class="bg-gray-900 dark:bg-black text-green-400 
-               p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed">{{ result }}</pre>
+    <!-- Div oculta para armazenar o resultado original do Prolog -->
+    <div id="raw-result" style="display: none;">{{ result }}</div>
+
+    <!-- Container onde as linhas paginadas vão aparecer -->
+    <pre id="result-container" class="bg-gray-900 dark:bg-black text-green-400 
+               p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed"></pre>
+    
+    <!-- Botão Ler mais -->
+    <button 
+      id="btn-ler-mais" 
+      onclick="loadMoreResults()" 
+      class="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 
+             px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 
+             transition hidden font-semibold text-sm">
+      Ler mais
+    </button>
   {% else %}
     <p class="text-gray-500 dark:text-gray-400">
       Nenhum resultado ainda.
@@ -157,12 +171,54 @@ function renderQueryButtons() {
     });
 }
 
+let linhasResultado = [];
+let indexAtual = 0;
+const ITENS_POR_PAGINA = 10;
+
+function initPagination() {
+    const rawDiv = document.getElementById("raw-result");
+    if (rawDiv) {
+        // Pega o texto original e divide quebrando nas linhas
+        const texto = rawDiv.textContent.trim();
+        if (texto) {
+            linhasResultado = texto.split('\n');
+            loadMoreResults(); // Carrega os primeiros 10 itens
+        }
+    }
+}
+
+function loadMoreResults() {
+    const container = document.getElementById("result-container");
+    const btnLerMais = document.getElementById("btn-ler-mais");
+
+    const proximoIndex = indexAtual + ITENS_POR_PAGINA;
+    const linhasParaMostrar = linhasResultado.slice(indexAtual, proximoIndex);
+
+    // Se for a primeira vez, substitui o texto. Se não, concatena.
+    if (indexAtual === 0) {
+        container.textContent = linhasParaMostrar.join('\n');
+    } else {
+        container.textContent += '\n' + linhasParaMostrar.join('\n');
+    }
+
+    indexAtual = proximoIndex;
+
+    // Se já mostramos todas as linhas, esconde o botão
+    if (indexAtual >= linhasResultado.length) {
+        btnLerMais.classList.add("hidden");
+    } else {
+        btnLerMais.classList.remove("hidden"); // Se ainda tem itens, mostra o botão
+    }
+}
+
 /* =========================
    INIT CONTROLADO
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
 
     renderQueryButtons();
+
+    initPagination();
 
     // ✔ auto-execução única (sem loop)
     if (!sessionStorage.getItem("autoExecuted")) {
