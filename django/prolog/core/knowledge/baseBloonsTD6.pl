@@ -328,24 +328,42 @@ gera('Blue Bloon', 'Red Bloon').
 % CONTEXTO
 % =========================
 
-fase(inicial).
-fase(middle).
-fase(late).
+fase('inicial').
+fase('middle').
+fase('late').
 
-aparece('Camo Bloon', middle).
-aparece('Lead Bloon', middle).
-aparece('Purple Bloon', middle).
-aparece('MOAB', middle).
-aparece('BFB', late).
-aparece('ZOMG', late).
-aparece('DDT', late).
-aparece('BAD', late).
+aparece('Camo Bloon', 'middle').
+aparece('Lead Bloon', 'middle').
+aparece('Purple Bloon', 'middle').
+aparece('MOAB', 'middle').
+aparece('BFB', 'late').
+aparece('ZOMG', 'late').
+aparece('DDT', 'late').
+aparece('BAD', 'late').
     
 % =========================
 % REGRA Queries
 % =========================
 
 lista_bloons_fase(inicial, Lista_Bloons):-
+% =========================
+% Basicas
+% =========================
+tipo_torre(Torre, Tipo):-
+  tipo(Id, Tipo),
+  torre(Id, Torre).
+
+tipo_gera_dinheiro(Torre, Path, Dinheiro):-
+  torre(Id, Torre),
+  gera_dinheiro(Id, Path, Dinheiro).
+
+gerados(Gera, Gerados) :-
+  setof(V, gera(Gera, V), Gerados).
+
+
+% =========================
+
+lista_bloons_fase('inicial', Lista_Bloons):-
   findall(B, (bloon(B), \+aparece(B, _)), Lista_Bloons), !.
 
 lista_bloons_fase(Fase, Lista_Bloons):-

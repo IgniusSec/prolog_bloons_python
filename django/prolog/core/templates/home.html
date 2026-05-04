@@ -102,15 +102,30 @@ const queryGroups = {
     { label: "Resistentes", query: "resistente(X)." },
     { label: "Imunes a explosão", query: "imune_explosao(X)." },
     { label: "Imunes a congelamento", query: "imune_congelamento(X)." },
-    { label: "Imunes a magia", query: "imune_magia(X)." }
+    { label: "Imunes a magia", query: "imune_magia(X)." },
+    { label: "Qual bloon é gerado", query: "gerados(Gerador, Gerado)." }
+
   ],
 
   "Habilidades": [
     { label: "Detecta camuflado", query: "estouro_especial(Torre, Path, 'camuflado')." },
     { label: "Estoura lead", query: "estouro_especial(Torre, Path, 'lead')" },
     { label: "Estoura gelo", query: "estouro_especial(Torre, Path, 'frozen')" },
-    { label: "Gera dinheiro", query: "tipo_gera_dinheiro(Torre, Path, Dinheiro)" },
+    { label: "Renda", query: "listar_torres_dinheiro(Torre)" },
     { label: "Alto dano", query: "dano_alto(Torre)" }
+  ],
+
+  "Fases": [
+    { label: "Todas", query: "fase(Fase)." },
+    { label: "Bloons da inicial", query: "lista_bloons_fase('inicial', Bloons)" },
+    { label: "Bloons da middle", query: "lista_bloons_fase('middle', Bloons)" },
+    { label: "Bloons da late", query: "lista_bloons_fase('late', Bloons)" }
+  ],
+
+  "Economia": [
+    { label: "Renda Fixa por Torre", query: "renda_fixa_cada_torre_por_rodada_em_cada_nivel(Nome, Nivel, Valor)." },
+    { label: "Dinheiro Total Torre", query: "max_dinheiro_por_torre_por_rodada(Nome, ValorTotal)" },
+    { label: "Gera dinheiro", query: "tipo_gera_dinheiro(Torre, Path, Dinheiro)" }
   ]
 };
 
