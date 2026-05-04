@@ -378,23 +378,6 @@ bloons_especiais(Bloon, Propriedade):-
     (imune_explosao(Bloon), Propriedade = 'imune_explosao');(imune_congelamento(Bloon), Propriedade = 'imune_congelamento');
     (imune_magia(Bloon), Propriedade = 'imune_magia')).
 
-% tipo_necessario_macaco([], _).
-% tipo_necessario_macaco([H|T], Tipo):-
-%
-%
-%
-% % lista de macacos possiveis, 
-% macaco_fase([], []).
-% macaco_fase(Macaco, [H|T]):-
-%
-%   \+
-%
-%
-%
-% passa_fase(Fase, Macacos):-
-%   lista_bloons_fase(Fase, Bloons),
-%   macaco_fase(Macacos, Bloons).
-
 % Regras economia 
 renda_fixa_cada_torre_por_rodada_em_cada_nivel(Nome, Nivel, Valor) :-
     torre(Id, Nome),
