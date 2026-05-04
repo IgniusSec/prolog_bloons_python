@@ -11,7 +11,7 @@ def home(request):
 def dados(request):
     # caminho absoluto do arquivo
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    file_path = os.path.join(BASE_DIR, "core", "utils", "baseBloonsTD6.pl")
+    file_path = os.path.join(BASE_DIR, "core", "knowledge", "baseBloonsTD6.pl")
 
     if request.method == "POST":
         novo_conteudo = request.POST.get("conteudo")
