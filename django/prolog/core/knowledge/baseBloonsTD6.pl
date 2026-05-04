@@ -228,11 +228,23 @@ frozen(21, '2-0-0').
 frozen(23, '0-3-0').
 frozen(22, '0-3-0').
 
-dano_alto(7, '5-0-2').
-dano_alto(10, '5-0-2').
-dano_alto(13, '5-0-2').
-dano_alto(14, '5-2-0').
-dano_alto(15, '5-2-0').
+dano_alto_custo_baixo(7, '3-0-2').
+dano_alto_custo_baixo(10, '3-0-2').
+dano_alto_custo_baixo(13, '3-0-2').
+dano_alto_custo_baixo(14, '3-2-0').
+dano_alto_custo_baixo(15, '3-2-0').
+
+dano_alto_custo_medio(7, '4-0-2').
+dano_alto_custo_medio(10, '4-0-2').
+dano_alto_custo_medio(13, '4-0-2').
+dano_alto_custo_medio(14, '4-2-0').
+dano_alto_custo_medio(15, '4-2-0').
+
+dano_alto_custo_alto(7, '5-0-2').
+dano_alto_custo_alto(10, '5-0-2').
+dano_alto_custo_alto(13, '5-0-2').
+dano_alto_custo_alto(14, '5-2-0').
+dano_alto_custo_alto(15, '5-2-0').
 
 % =========================
 % BLOONS
@@ -333,6 +345,7 @@ aparece('BAD', 'late').
 % REGRA Queries
 % =========================
 
+lista_bloons_fase(inicial, Lista_Bloons):-
 % =========================
 % Basicas
 % =========================
@@ -433,16 +446,22 @@ exige_habilidade(Bloon, camuflado) :- camuflado(Bloon).
 exige_habilidade('Lead Bloon', chumbo).
 exige_habilidade('DDT', chumbo). 
 exige_habilidade(Bloon, dano_bruto) :- resistente(Bloon), \+ Bloon = 'Lead Bloon'. 
-macaco_cobre_habilidade(macaco(Nome, Nivel), camuflado) :- 
+
+macaco_cobre_habilidade(macaco(Nome, Nivel), camuflado, _) :- 
     torre(Id, Nome), camuflado(Id, Nivel).
     
-macaco_cobre_habilidade(macaco(Nome, Nivel), chumbo) :- 
+macaco_cobre_habilidade(macaco(Nome, Nivel), chumbo, _) :- 
     torre(Id, Nome), lead(Id, Nivel).
-    
-macaco_cobre_habilidade(macaco(Nome, Nivel), dano_bruto) :- 
-    torre(Id, Nome), 
-    dano_alto(Id, Nivel).
-    dano_alto(Nome).
+
+macaco_cobre_habilidade(macaco(Nome, Nivel), dano_bruto, inicial) :- 
+    torre(Id, Nome), dano_alto_custo_baixo(Id, Nivel).
+
+macaco_cobre_habilidade(macaco(Nome, Nivel), dano_bruto, middle) :- 
+    torre(Id, Nome), dano_alto_custo_medio(Id, Nivel).
+
+macaco_cobre_habilidade(macaco(Nome, Nivel), dano_bruto, late) :- 
+    torre(Id, Nome), dano_alto_custo_alto(Id, Nivel).
+
 lista_necessidades([], []).
 lista_necessidades([B | T], [Hab | Resto]) :-
     exige_habilidade(B, Hab),
@@ -452,16 +471,16 @@ lista_necessidades([B | T], [Hab | Resto]) :-
 lista_necessidades([_ | T], Resto) :- 
     lista_necessidades(T, Resto).
 
-time_tem_habilidade(Hab, [Macaco | _]) :- 
-    macaco_cobre_habilidade(Macaco, Hab), 
+time_tem_habilidade(Hab, [Macaco | _], Fase) :- 
+    macaco_cobre_habilidade(Macaco, Hab, Fase), 
     !.
-time_tem_habilidade(Hab, [_ | T]) :- 
-    time_tem_habilidade(Hab, T).
+time_tem_habilidade(Hab, [_ | T], Fase) :- 
+    time_tem_habilidade(Hab, T, Fase).
 
-time_atende_necessidades([], _).
-time_atende_necessidades([Hab | T], Time) :-
-    time_tem_habilidade(Hab, Time),
-    time_atende_necessidades(T, Time).
+time_atende_necessidades([], _, _).
+time_atende_necessidades([Hab | T], Time, Fase) :-
+    time_tem_habilidade(Hab, Time, Fase),
+    time_atende_necessidades(T, Time, Fase).
 
 gera_esquadrao([macaco(M1, _), macaco(M2, _), macaco(M3, _)]) :-
     torre(Id1, M1),
@@ -481,5 +500,5 @@ passa_fase(Fase, Macacos) :-
     lista_necessidades(Bloons, NecessidadesSujas),
     remove_duplicatas(NecessidadesSujas, NecessidadesLimpas),
     gera_esquadrao(Macacos),
-    time_atende_necessidades(NecessidadesLimpas, Macacos),
-    preenche_niveis_vazios(Macacos). % Chamada final para limpar a visualização
+    time_atende_necessidades(NecessidadesLimpas, Macacos, Fase),
+    preenche_niveis_vazios(Macacos).
